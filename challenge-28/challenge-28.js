@@ -45,13 +45,11 @@
   };
 
   DOM.prototype.map = function map(){
-    // return Array.prototype.map.apply(this.element, arguments);
-    return [...this.element].map.apply(this.element, arguments);
+    return Array.prototype.map.apply(this.element, arguments);
   };
 
   DOM.prototype.filter = function filter(){
-    // return Array.prototype.filter.apply(this.element, arguments);
-    return [...this.element].filter.apply(this.element, arguments);
+    return Array.prototype.filter.apply(this.element, arguments);
   };
 
   const $cep = new DOM('[data-js="cep"]');

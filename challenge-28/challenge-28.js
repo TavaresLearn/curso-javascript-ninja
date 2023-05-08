@@ -1,3 +1,5 @@
+(function() {
+  'use strict';
   /*
   No HTML:
   - Crie um formulário com um input de texto que receberá um CEP e um botão
@@ -25,3 +27,115 @@
   - Utilize a lib DOM criada anteriormente para facilitar a manipulação e
   adicionar as informações em tela.
   */
+
+  //lib DOM
+  function DOM(elem){
+    this.element = document.querySelectorAll(elem);
+  };
+
+  // extendendo a lib DOM com novos métodos on, off e get
+  DOM.prototype.on = function on(evt, callback){
+    this.element.forEach(function(item){
+      item.addEventListener(evt, callback, false);
+    });
+  };
+
+  DOM.prototype.get = function get(){
+    return this.element;
+  };
+
+  DOM.prototype.map = function map(){
+    // return Array.prototype.map.apply(this.element, arguments);
+    return [...this.element].map.apply(this.element, arguments);
+  };
+
+  DOM.prototype.filter = function filter(){
+    // return Array.prototype.filter.apply(this.element, arguments);
+    return [...this.element].filter.apply(this.element, arguments);
+  };
+
+  const $cep = new DOM('[data-js="cep"]');
+  const $form = new DOM('[data-js="form-find-cep"]');
+  const $resultMessage = document.querySelector('[data-js="result-message"]');
+  const $resultAddress = document.querySelector('[data-js="result-address"]');
+  const ajax = new XMLHttpRequest();
+
+  function isJustNumbers(numbers) {
+    return numbers.replace(/\D+/g, '');
+  }
+
+  function isRequestCepOk() {
+    return ajax.readyState === 4 & ajax.status === 200;
+  }
+
+  function getUrlCep(){
+    return `https://viacep.com.br/ws/${isJustNumbers($cep.get()[0].value)}/json/`;
+  }
+
+  function resultRequestCep(){
+    return JSON.parse(ajax.responseText || null);
+    // let dataRequest;
+    // try {
+    //   dataRequest = JSON.parse(ajax.responseText);
+    // } catch (error) {
+    //   dataRequest = null;
+    // }
+    // return dataRequest;
+  }
+
+  function setFieldsForm(){
+    let resultCep = resultRequestCep();
+
+    if(resultCep.erro){
+      getMessage('error');
+      return;
+    }
+
+    getMessage('success');
+    $resultAddress.innerHTML = `
+      <p>
+        ${resultCep.logradouro}, ${resultCep.bairro} <br>
+        ${resultCep.localidade} - ${resultCep.uf}
+      </p>
+    `;
+  }
+
+  function handleReadyStateChange() {
+    getMessage('loading');
+
+    if(isRequestCepOk()){
+      setFieldsForm();
+    }
+  };
+
+  function getMessage(type){
+    let cepOnlyNumbers = isJustNumbers($cep.get()[0].value);
+    const messages = {
+      minLegth: `<small>Cep incorreto:[${cepOnlyNumbers}]</small>`,
+      loading: `<small>Buscando informações para o CEP:[${cepOnlyNumbers}]...</small>`,
+      error: `<small>Não encontramos o endereço para o CEP:[${cepOnlyNumbers}].</small>`,
+      success: `Endereço referente ao CEP:[${cepOnlyNumbers}]`,
+    };
+    $resultMessage.innerHTML = messages[type];
+  }
+
+  function handleSubmitForm(e) {
+    e.preventDefault();
+
+    let cepOnlyNumbers = isJustNumbers($cep.get()[0].value);
+    let urlRequest = getUrlCep();
+    $resultAddress.innerHTML='';
+
+    if (cepOnlyNumbers.length !== 8){
+      getMessage('minLegth');
+      return;
+    }
+
+    ajax.open('GET',urlRequest);
+    ajax.send();
+    ajax.addEventListener('readystatechange', handleReadyStateChange);
+  };
+
+  $form.on('submit', handleSubmitForm);
+
+})();

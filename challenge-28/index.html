@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challenge 28 - consulta de cep</title>
+  <style>
+    .wrap{
+      padding-top: 32px;
+      max-width: 300px;
+      display: flex;
+      flex-direction: column;
+      margin-inline:auto;
+      gap: 24px;
+    }
+    h1{
+      font-size: 20px;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .form-item, .btn {
+      padding: 12px;
+    }
+    label, .box-message {
+      display: block;
+    }
+    .btn {
+      cursor: pointer;
+      font-weight: bold;
+    }
+    div:empty{
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <form data-js="form-find-cep">
+      <label for="field-cep">Informe o CEP para buscar</label>
+      <input class="form-item" type="text" name="field-cep" data-js="cep">
+      <button class="btn" type="submit" data-js="btn"> Buscar </button>
+    </form>
+    <section class="section">
+      <header class="header">
+        <h1 data-js="result-message"></h1>
+      </header>
+      <div ></div>
+      <p data-js="result-address"></p>
+    </section>
+  </main>
+
+  <script src="challenge-28.js"></script>
+</body>
+</html>

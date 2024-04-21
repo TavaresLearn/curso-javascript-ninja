@@ -33,6 +33,12 @@ addValue();
 // Qual o retorno da função? (Use comentários de bloco).
 /* O valor da variável agora é 10 */
 
+// Invoque a função criada acima.
+?
+
+// Qual o retorno da função? (Use comentários de bloco).
+?
+
 /*
 Crie uma função com as seguintes características:
 1. A função deve receber 3 argumentos;
